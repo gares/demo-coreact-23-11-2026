@@ -122,8 +122,9 @@ morphisms:
 The `subscripts` helper renames `c_0`, `c_1`, `c_2` to `c₀`, `c₁`, `c₂` with
 `json.copy`. `ppx_elpi` generated that predicate (it is in the stub), and it
 copies a json value by calling `string.copy` on each string, keys included.
-The ad hoc clauses given with `=>`, such as `(string.copy "c_0" "c₀" :- !)`,
-are tried before the default `string.copy X X`, so only these strings change.
+The ad hoc clauses, such as `string.copy "c_0" "c₀"`, are given with `=!=>`,
+which adds each one with a cut. They are tried before the default
+`string.copy X X`, so only these strings change.
 
 Open `demo.elpi` in VS Code. `elpi-lsp` type checks it against the stub
 of `elpi-json`, so hovering `json.lookup` or `json.assoc` shows its type and
@@ -153,7 +154,7 @@ them, and the program names them by an identifier, not by a path. In Elpi,
 
 Names such as `=_E` or `s_{=_E}` are not Rocq identifiers, so `sanitize`
 renames them with the same `json.copy` trick as in plain Elpi:
-`(string.copy "=_E" "eq_E" :- !)` and so on (`c_0` still becomes `c₀`, a
+`string.copy "=_E" "eq_E"` and so on, given with `=!=>` (`c_0` still becomes `c₀`, a
 valid identifier). Then `objects-decl` and `edges-decl` build the
 declarations, `coq.typecheck-indt-decl` checks them, and `coq.env.add-indt`
 adds them. The constructors of `edges` find the objects with `coq.locate`:
