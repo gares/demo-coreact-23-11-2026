@@ -12,7 +12,7 @@ valid opam root". Run `unset OPAMROOT` first.
 |---------|---------|
 | `rocq-core` | 9.3.0 |
 | `elpi`, `elpi-json`, `ppx_elpi`, `elpi-lsp` | 4.1.1 |
-| `rocq-elpi`, `rocq-elpi-lsp-shim` | `master` (soon 3.7.0) |
+| `rocq-elpi`, `rocq-elpi-lsp-shim` | 3.7.0 |
 | `vsrocq-language-server`, `ocaml-lsp-server` | latest |
 
 ```sh
@@ -22,20 +22,14 @@ unset OPAMROOT   # use the default root, ~/.opam
 opam switch create . ocaml-base-compiler.5.3.0 --no-install
 eval $(opam env --switch=. --set-switch)
 
-# rocq-elpi from its master branch, until 3.7.0 is released; the shim lets
-# elpi-lsp check the Elpi files of rocq-elpi programs outside Rocq
-opam pin add -y --no-action rocq-elpi "git+https://github.com/LPCIC/coq-elpi.git#master"
-opam pin add -y --no-action rocq-elpi-lsp-shim "git+https://github.com/LPCIC/coq-elpi.git#master"
-
+# rocq-elpi-lsp-shim lets elpi-lsp check the Elpi files of rocq-elpi
+# programs outside Rocq
 opam install -y \
   rocq-core.9.3.0 \
   elpi.4.1.1 elpi-json.4.1.1 ppx_elpi.4.1.1 elpi-lsp.4.1.1 \
-  rocq-elpi rocq-elpi-lsp-shim \
+  rocq-elpi.3.7.0 rocq-elpi-lsp-shim.3.7.0 \
   vsrocq-language-server ocaml-lsp-server
 ```
-
-Once rocq-elpi 3.7.0 is on opam, drop the pin:
-`opam pin remove rocq-elpi rocq-elpi-lsp-shim && opam install rocq-elpi.3.7.0 rocq-elpi-lsp-shim.3.7.0`.
 
 Check that everything is there:
 
