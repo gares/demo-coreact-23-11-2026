@@ -12,7 +12,7 @@ valid opam root". Run `unset OPAMROOT` first.
 |---------|---------|
 | `rocq-core` | 9.3.0 |
 | `elpi`, `elpi-json`, `ppx_elpi`, `elpi-lsp` | 4.1.1 |
-| `rocq-elpi` | `master` (soon 3.7.0) |
+| `rocq-elpi`, `rocq-elpi-lsp-shim` | `master` (soon 3.7.0) |
 | `vsrocq-language-server`, `ocaml-lsp-server` | latest |
 
 ```sh
@@ -22,18 +22,20 @@ unset OPAMROOT   # use the default root, ~/.opam
 opam switch create . ocaml-base-compiler.5.3.0 --no-install
 eval $(opam env --switch=. --set-switch)
 
-# rocq-elpi from its master branch, until 3.7.0 is released
+# rocq-elpi from its master branch, until 3.7.0 is released; the shim lets
+# elpi-lsp check the Elpi files of rocq-elpi programs outside Rocq
 opam pin add -y --no-action rocq-elpi "git+https://github.com/LPCIC/coq-elpi.git#master"
+opam pin add -y --no-action rocq-elpi-lsp-shim "git+https://github.com/LPCIC/coq-elpi.git#master"
 
 opam install -y \
   rocq-core.9.3.0 \
   elpi.4.1.1 elpi-json.4.1.1 ppx_elpi.4.1.1 elpi-lsp.4.1.1 \
-  rocq-elpi \
+  rocq-elpi rocq-elpi-lsp-shim \
   vsrocq-language-server ocaml-lsp-server
 ```
 
 Once rocq-elpi 3.7.0 is on opam, drop the pin:
-`opam pin remove rocq-elpi && opam install rocq-elpi.3.7.0`.
+`opam pin remove rocq-elpi rocq-elpi-lsp-shim && opam install rocq-elpi.3.7.0 rocq-elpi-lsp-shim.3.7.0`.
 
 Check that everything is there:
 
@@ -130,15 +132,20 @@ the terminal, run `elpi-lsp -debug demo/demo.elpi`.
 
 ### 3. Rocq-Elpi
 
-[demo/demo.v](demo/demo.v) reads the same file from a Rocq document, and
-turns the schema into two inductive types instead of printing it:
+[demo/rocq/demo.v](demo/rocq/demo.v) reads the same file from a Rocq document, and
+turns the schema into two inductive types instead of printing it. Its Elpi
+code is in [demo/rocq/demo-rocq.elpi](demo/rocq/demo-rocq.elpi):
 
 ```coq
 From demo Extra Dependency "monicity-V1.json" as monicity_json.
+From demo.rocq Extra Dependency "demo-rocq.elpi" as demo_rocq.
+
+Elpi Command demo.
+Elpi Accumulate File demo_rocq.
 ```
 
-The json file becomes a dependency of `demo.v`. The build system can see
-it, and the program names it by an identifier, not by a path. In Elpi,
+Both files become dependencies of `demo.v`. The build system can see
+them, and the program names them by an identifier, not by a path. In Elpi,
 `coq.extra-dep "monicity_json" (some File)` gives back the path, and
 `json.from_file` reads it. The plugin is the same as in plain Elpi:
 `accumulate "+elpi-json/utils"` loads it in Rocq too, and no
@@ -152,7 +159,7 @@ declarations, `coq.typecheck-indt-decl` checks them, and `coq.env.add-indt`
 adds them. The constructors of `edges` find the objects with `coq.locate`:
 
 ```sh
-rocq compile -R demo demo demo/demo.v
+rocq compile -R demo demo demo/rocq/demo.v
 ```
 
 ```coq
@@ -173,5 +180,15 @@ Inductive edges : objects -> objects -> Set :=
   | μ : edges mon E.
 ```
 
-Or open `demo/demo.v` in VS Code and step to the last lines:
+Or open `demo/rocq/demo.v` in VS Code and step to the last lines:
 `Print objects` and `Print edges` show them.
+
+The Rocq files are in their own directory, `demo/rocq/`, with an
+[elpi.toml](demo/rocq/elpi.toml) that has `use = ["+rocq-elpi"]`. In VS Code,
+`elpi-lsp` then checks it as Rocq would: it knows the `coq.*` APIs, the
+`{{ }}` quotations (through `rocq-elpi-lsp-shim`) and the template of
+`Elpi Command`. Without Rocq, it reads their stubs. They cannot stay next to `demo.elpi`:
+an `elpi.toml` is the project of every file below it, and the prelude of
+rocq-elpi declares its own `main` (and plain `elpi` lacks the OCaml code of
+the Rocq builtins). Check it from the terminal with
+`elpi-lsp -debug demo/rocq/demo-rocq.elpi`.

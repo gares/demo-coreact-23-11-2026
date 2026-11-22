@@ -1,11 +1,5 @@
-From elpi Require Import elpi.
-
-(* the json file is declared as a dependency of this .v file, under the
-   logical path demo (see _RocqProject: -R demo demo) *)
-From demo Extra Dependency "monicity-V1.json" as monicity_json.
-
-Elpi Command demo.
-Elpi Accumulate lp:{{
+% The Elpi program demo of demo.v: from the schema of a json file to the
+% inductives objects and edges
 accumulate "+elpi-json/utils". % json.lookup; it accumulates "+elpi-json" too
 
 % [schema J Objects Morphisms] the names of the objects, and the morphisms
@@ -62,10 +56,3 @@ main [str Dep] :-
   schema J1 Objs Mors,
   declare {objects-decl Objs} ObjI,
   declare {edges-decl (global (indt ObjI)) Mors} _.
-}}.
-Elpi Export demo.
-
-demo "monicity_json".
-
-Print objects.
-Print edges.

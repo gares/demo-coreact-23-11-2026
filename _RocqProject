@@ -1,2 +1,2 @@
 -R demo/ demo
-demo/demo.v
+demo/rocq/demo.v

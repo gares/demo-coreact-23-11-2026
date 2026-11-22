@@ -1,0 +1,4 @@
+# The project of demo-rocq.elpi, for elpi-lsp (outside Rocq): the prelude,
+# preload and paths of rocq-elpi, so the coq.* APIs and {{ }} are known
+name = "demo-rocq"
+use = ["+rocq-elpi"]
