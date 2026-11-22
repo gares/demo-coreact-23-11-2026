@@ -38,9 +38,9 @@ commas [X|XS] [std.fmt.txt X, std.fmt.txt ",", std.fmt.spc | R] :- commas XS R.
 % [subscripts J J'] J' is J with c_0, c_1, c_2 written c₀, c₁, c₂
 func subscripts json -> json.
 subscripts J J' :-
-  [ (string.copy "c_0" "c₀" :- !),
-    (string.copy "c_1" "c₁" :- !),
-    (string.copy "c_2" "c₂" :- !) ] => json.copy J J'.
+  [ string.copy "c_0" "c₀",
+    string.copy "c_1" "c₁",
+    string.copy "c_2" "c₂" ] =!=> json.copy J J'.
 
 func main list string.
 main _ :-
