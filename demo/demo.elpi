@@ -1,0 +1,12 @@
+% Plain Elpi: load monicity-V1.json and display it.
+%   elpi -exec main demo.elpi
+accumulate "monicity". % monicity.elpi, next to this file
+
+func main list string.
+main _Args :-
+  std.assert-ok! (json.from_file "monicity-V1.json" J) "cannot read monicity-V1.json",
+  print "--- the json value, as an Elpi term (keys are sorted) ---",
+  print J,
+  print "--- what it describes ---",
+  monicity.describe J Lines,
+  std.forall Lines (l\ print l).
