@@ -24,6 +24,7 @@ eval $(opam env --switch=. --set-switch)
 
 # rocq-elpi-lsp-shim lets elpi-lsp check the Elpi files of rocq-elpi
 # programs outside Rocq
+opam repo add rocq https://rocq-prover.org/opam/released
 opam install -y \
   rocq-core.9.3.0 \
   elpi.4.1.1 elpi-json.4.1.1 ppx_elpi.4.1.1 elpi-lsp.4.1.1 \
