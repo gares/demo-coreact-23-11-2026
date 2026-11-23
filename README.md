@@ -1,4 +1,4 @@
-# Elpi plugins, from OCaml to Rocq: a demo
+# Elpi plugins, json from OCaml to Rocq
 
 ## Setup
 
