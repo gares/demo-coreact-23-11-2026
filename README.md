@@ -82,10 +82,10 @@ Open [elpi-json/src/elpi_json.ml](elpi-json/src/elpi_json.ml).
 
 ### 2. Plain Elpi
 
-[demo/monicity-V1.json](demo/monicity-V1.json) describes this schema: each
+[demo/monicity_data.json](demo/monicity_data.json) describes this schema: each
 object has an index, and each morphism a source and a target.
 
-![the schema of monicity-V1.json](demo/monicity-V1.png)
+![the schema of monicity_data.json](demo/monicity-V1.png)
 
 [demo/demo.elpi](demo/demo.elpi) accumulates `"+elpi-json/utils"`, which
 loads the plugin and gives `json.lookup`. Its function `schema` returns the
@@ -129,11 +129,11 @@ the terminal, run `elpi-lsp -debug demo/demo.elpi`.
 
 [demo/rocq/demo.v](demo/rocq/demo.v) reads the same file from a Rocq document, and
 turns the schema into two inductive types instead of printing it. Its Elpi
-code is in [demo/rocq/demo-rocq.elpi](demo/rocq/demo-rocq.elpi):
+code is in [demo/rocq/demo_rocq.elpi](demo/rocq/demo_rocq.elpi):
 
 ```coq
-From demo Extra Dependency "monicity-V1.json" as monicity_json.
-From demo.rocq Extra Dependency "demo-rocq.elpi" as demo_rocq.
+From demo Extra Dependency "monicity_data.json" as monicity_json.
+From demo.rocq Extra Dependency "demo_rocq.elpi" as demo_rocq.
 
 Elpi Command demo.
 Elpi Accumulate File demo_rocq.
@@ -186,4 +186,4 @@ The Rocq files are in their own directory, `demo/rocq/`, with an
 an `elpi.toml` is the project of every file below it, and the prelude of
 rocq-elpi declares its own `main` (and plain `elpi` lacks the OCaml code of
 the Rocq builtins). Check it from the terminal with
-`elpi-lsp -debug demo/rocq/demo-rocq.elpi`.
+`elpi-lsp -debug demo/rocq/demo_rocq.elpi`.

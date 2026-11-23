@@ -1,4 +1,4 @@
-% Plain Elpi: the objects and the morphisms of the schema of monicity-V1.json
+% Plain Elpi: the objects and the morphisms of the schema of monicity_data.json
 %   elpi -exec main demo.elpi
 accumulate "+elpi-json/utils". % json.lookup; it accumulates "+elpi-json" too
 
@@ -44,7 +44,7 @@ subscripts J J' :-
 
 func main list string.
 main _ :-
-  std.assert-ok! (json.from_file "monicity-V1.json" J) "cannot read monicity-V1.json",
+  std.assert-ok! (json.from_file "monicity_data.json" J) "cannot read monicity_data.json",
   subscripts J J1,
   schema J1 Objs Mors,
   std.fmt->string _ {pp-schema Objs Mors} Text,
